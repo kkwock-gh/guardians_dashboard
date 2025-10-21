@@ -20,7 +20,6 @@ Welcome to the **TDSS Dashboard**!
 - 🪄 Haystack Database Compiler  
 - 🔍 Advanced troubleshooting tools  
 
-Use the left sidebar to navigate between pages.
 """)
 
 col1, col2, col3, col4 = st.columns(4)
