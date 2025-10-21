@@ -52,7 +52,6 @@ def load_data(selected_envs):
         if pd.isna(val):
             return (None, None)
         first_link = str(val).split(";")[0].strip()
-        # Match pattern like /ghds/apps/rundeck/Reagent_QC/DEV/Lunar2/LPA_QC/
         match = re.search(r"/Reagent_QC/([^/]+)/([^/]+)/([^/]+)/", first_link)
         if match:
             return match.group(2), match.group(3)  # Project, Job
@@ -76,21 +75,58 @@ if selected_envs:
         st.warning("No data loaded.")
         st.stop()
 
-    # --- Sidebar Filters ---
-    projects = sorted([p for p in combined_df["Project"].dropna().unique()])
-    jobs = sorted([j for j in combined_df["Job"].dropna().unique()])
+    # --- Sidebar Dropdown Filters ---
+    with st.sidebar:
+        st.header("🔍 Filter Data")
 
-    selected_projects = st.sidebar.multiselect("Select Projects:", projects, default=projects)
-    selected_jobs = st.sidebar.multiselect("Select Jobs:", jobs, default=jobs)
+        environments = sorted(combined_df["Environment"].dropna().unique())
+        selected_environment = st.selectbox(
+            "Environment (PROD/DEV/TEST)",
+            [""] + environments,
+            index=0,
+            format_func=lambda x: x if x != "" else "Select Environment"
+        )
+
+        if selected_environment:
+            available_projects = sorted(
+                combined_df.loc[combined_df["Environment"] == selected_environment, "Project"].dropna().unique()
+            )
+        else:
+            available_projects = sorted(combined_df["Project"].dropna().unique())
+
+        selected_project = st.selectbox(
+            "Project",
+            [""] + available_projects,
+            index=0,
+            format_func=lambda x: x if x != "" else "Select Project"
+        )
+
+        if selected_project:
+            available_jobs = sorted(
+                combined_df.loc[
+                    (combined_df["Environment"] == selected_environment)
+                    & (combined_df["Project"] == selected_project),
+                    "Job",
+                ].dropna().unique()
+            )
+        else:
+            available_jobs = sorted(combined_df["Job"].dropna().unique())
+
+        selected_job = st.selectbox(
+            "Job",
+            [""] + available_jobs,
+            index=0,
+            format_func=lambda x: x if x != "" else "Select Job"
+        )
 
     # --- Apply Filters ---
     filtered_df = combined_df[
-        combined_df["Project"].isin(selected_projects) &
-        combined_df["Job"].isin(selected_jobs)
+        ((combined_df["Environment"] == selected_environment) | (selected_environment == "")) &
+        ((combined_df["Project"] == selected_project) | (selected_project == "")) &
+        ((combined_df["Job"] == selected_job) | (selected_job == ""))
     ]
 
     st.success(f"✅ Loaded {len(filtered_df)} rows after filtering.")
-
     st.dataframe(filtered_df.head(50), use_container_width=True)
 
     # --- Download Button ---
@@ -101,5 +137,6 @@ if selected_envs:
         "haystack_filtered.csv",
         "text/csv",
     )
+
 else:
     st.warning("Please select at least one environment.")
