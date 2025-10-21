@@ -4,9 +4,16 @@ import pandas as pd
 st.title("🔎 Quick Search Tool")
 
 # Load default CSV
+@st.cache_data
+
+def load_batch_records(path="/app/haystack_db/batchrecords/rqc_batch_records.feather"):
+    df = pd.read_feather(path)
+    return df
+
 try:
-    df = pd.read_csv("/app/haystack_db/batchrecords/rqc_batch_records.csv")
+    df = load_batch_records()
     df = df[df["Not Used"] == 'False']
+    
 except FileNotFoundError:
     st.error("File 'rqc_batch_records.csv' not found.")
     st.stop()

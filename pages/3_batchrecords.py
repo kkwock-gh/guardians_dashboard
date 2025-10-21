@@ -4,7 +4,14 @@ import pandas as pd
 st.title("Reagents QC Batch Records")
 
 # Load CSV
-df = pd.read_csv("/app/haystack_db/batchrecords/rqc_batch_records.csv")
+# df = pd.read_csv("/app/haystack_db/batchrecords/rqc_batch_records.csv")
+
+@st.cache_data
+def load_batch_records(path="/app/haystack_db/batchrecords/rqc_batch_records.feather"):
+    df = pd.read_feather(path)
+    return df
+
+df = load_batch_records()
 df = df[df["Not Used"] == 'False']
 
 # --- Split project column into Environment and Project ---
