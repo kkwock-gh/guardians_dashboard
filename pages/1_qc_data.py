@@ -75,39 +75,23 @@ if selected_envs:
         st.warning("No data loaded.")
         st.stop()
 
-    # --- Sidebar Dropdown Filters ---
+    # --- Sidebar: simple dropdown filters (appear only after load) ---
     with st.sidebar:
         st.header("🔍 Filter Data")
 
-        environments = sorted(combined_df["Environment"].dropna().unique())
-        selected_environment = st.selectbox(
-            "Environment (PROD/DEV/TEST)",
-            [""] + environments,
-            index=0,
-            format_func=lambda x: x if x != "" else "Select Environment"
-        )
-
-        if selected_environment:
-            available_projects = sorted(
-                combined_df.loc[combined_df["Environment"] == selected_environment, "Project"].dropna().unique()
-            )
-        else:
-            available_projects = sorted(combined_df["Project"].dropna().unique())
-
+        # Projects available in the currently loaded data
+        available_projects = sorted(combined_df["Project"].dropna().unique())
         selected_project = st.selectbox(
             "Project",
             [""] + available_projects,
             index=0,
-            format_func=lambda x: x if x != "" else "Select Project"
+            format_func=lambda x: x if x != "" else "All Projects"
         )
 
+        # Jobs available — if a project is selected, restrict jobs to that project
         if selected_project:
             available_jobs = sorted(
-                combined_df.loc[
-                    (combined_df["Environment"] == selected_environment)
-                    & (combined_df["Project"] == selected_project),
-                    "Job",
-                ].dropna().unique()
+                combined_df.loc[combined_df["Project"] == selected_project, "Job"].dropna().unique()
             )
         else:
             available_jobs = sorted(combined_df["Job"].dropna().unique())
@@ -116,12 +100,11 @@ if selected_envs:
             "Job",
             [""] + available_jobs,
             index=0,
-            format_func=lambda x: x if x != "" else "Select Job"
+            format_func=lambda x: x if x != "" else "All Jobs"
         )
 
-    # --- Apply Filters ---
+    # --- Apply Filters (note: no Environment selectbox here; use top multiselect to control load) ---
     filtered_df = combined_df[
-        ((combined_df["Environment"] == selected_environment) | (selected_environment == "")) &
         ((combined_df["Project"] == selected_project) | (selected_project == "")) &
         ((combined_df["Job"] == selected_job) | (selected_job == ""))
     ]
@@ -139,4 +122,4 @@ if selected_envs:
     )
 
 else:
-    st.warning("Please select at least one environment.")
+    st.warning("Please select at least one environment to load (top-left).")
