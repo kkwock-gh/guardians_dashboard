@@ -4,7 +4,7 @@ import pandas as pd
 st.title("📚 Database Explorer")
 
 # Load CSV
-df = pd.read_csv("/screening/scratch/kkwock/haystack_db/rqc_batch_records.csv")
+df = pd.read_csv("/screening/scratch/kkwock/haystack_db/batchrecords/rqc_batch_records.csv")
 df = df[df["Not Used"] == 'False']
 
 # Sidebar filters
