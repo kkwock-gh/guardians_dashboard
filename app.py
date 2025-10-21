@@ -1,33 +1,33 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="TDSS Dashboard",
-    page_icon="🔧",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title="Guardians Dashboard", page_icon="🧬", layout="wide")
 
-st.title("🔧 TDSS Dashboard")
-st.markdown("### Techdev Dashboard for Troubleshooting")
+st.title("Guardians Dashboard")
 
 st.markdown("""
-Welcome to the **TDSS Dashboard**!
+Welcome to the **Guardians Dashboard** — your hub for Reagent QC data, batch tracking, and quick lookups.  
+Use the sidebar or navigation tabs to access each section:
 
-**Features:**
-- 📊 Real-time monitoring dashboard  
-- 📈 Analytics and insights  
-- ⚙️ Customizable settings  
-- 🪄 Haystack Database Compiler  
-- 🔍 Advanced troubleshooting tools  
+### Lot Search
+- Search by **Lot ID** or **Reagent Name**.  
+- Instantly see associated **QC Batch Record links** and **related data files**.  
+- Ideal for when you just need to find “where did this lot run?” quickly.
 
+### QC Data
+- Explore **Haystack QC results** pulled from environment databases.  
+- Filter by **Environment (PROD / TEST / DEV)**, **Project**, and **QC Method (Job)**.  
+- Use this when investigating specific QC outputs or verifying data availability.
+
+### Batch Records
+- View and filter **QC Batch Records** by Environment, Project, and Job.  
+- Review **lot-level reagent and equipment usage**.  
+- Download combined batch record summaries for deeper review or tracking.
+
+---
+
+🧠 **Tip:**  
+Each section supports filtering and CSV export. Use dropdowns on the left to refine your search — results update automatically.
 """)
 
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.metric("Active Systems", "12", "2")
-with col2:
-    st.metric("Alerts", "3", "-1")
-with col3:
-    st.metric("Response Time", "245ms", "-12ms")
-with col4:
-    st.metric("Uptime", "99.8%", "0.1%")
+st.divider()
+st.info("➡️ Use the sidebar to navigate between pages.")
