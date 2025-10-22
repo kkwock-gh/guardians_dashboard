@@ -23,12 +23,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the Streamlit default port
-EXPOSE 8502
+EXPOSE 8503
 
 # Streamlit configuration (disables telemetry and headless errors)
 ENV STREAMLIT_HOME=/app
 ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 
 # Run the app
-CMD ["streamlit", "run", "app.py", "--server.port=8502", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py", "--server.port=8503", "--server.address=0.0.0.0"]
 

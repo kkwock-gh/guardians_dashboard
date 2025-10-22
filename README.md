@@ -71,6 +71,15 @@ streamlit run app.py
 
 The application will open in your default web browser. You can also access it at `http://localhost:8501`.
 
+## Running via Docker
+```
+docker build --no-cache -t guardians_dashboard:latest .
+
+docker run -it --rm \
+  -p 8502:8502 \
+  -v /screening/scratch/kkwock/haystack_db:/app/haystack_db \
+  guardians_dashboard:latest
+```
 ---
 
 ## Navigation
